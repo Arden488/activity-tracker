@@ -10,7 +10,7 @@ const bot = new Telegraf(token);
 const path = "a98";
 const PORT = process.env.PORT || 3456;
 
-bot.on("text", (ctx) => ctx.replyWithHTML("<b>Hello</b>"));
+bot.on("text", (ctx) => ctx.replyWithHTML("<b>Hello2</b>"));
 
 if (process.env.NODE_ENV === "production") {
     bot.telegram.setWebhook(`${process.env.HEROKU_URL}/${path}`);
