@@ -1,0 +1,19 @@
+{
+  "name": "activity-tracker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Arden488/activity-tracker.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Arden488/activity-tracker/issues"
+  },
+  "homepage": "https://github.com/Arden488/activity-tracker#readme"
+}
