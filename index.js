@@ -9,7 +9,7 @@ if (token === undefined) {
 
 const bot = new Telegraf(token);
 const path = "a98";
-const port = process.env.PORT || 3456;
+const PORT = process.env.PORT || 3456;
 
 bot.on("text", (ctx) => ctx.replyWithHTML("<b>Hello</b>"));
 
@@ -25,6 +25,6 @@ app.get("/", (req, res) => res.send("Hello World!"));
 // Set the bot API endpoint
 app.use(bot.webhookCallback(`/${path}`));
 
-app.listen(port, () => {
-    console.log(`App is listening on port ${port}!`);
+app.listen(PORT, () => {
+    console.log(`App is listening on PORT ${PORT}!`);
 });
