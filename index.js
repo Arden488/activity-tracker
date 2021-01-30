@@ -26,6 +26,6 @@ app.get("/", (req, res) => res.send("Hello World!"));
 app.use(bot.webhookCallback(`/${path}`));
 
 app.listen(PORT, () => {
-    console.log(process.env.HEROKU_URL);
+    console.log(process.env.PORT);
     console.log(`App is listening on PORT ${PORT}!`);
 });
