@@ -53,11 +53,12 @@ const superWizard = new Scenes.WizardScene(
 // bot.on("text", (ctx) => ctx.replyWithHTML("<b>Hello2</b>"));
 // bot.on("sticker", (ctx) => ctx.reply("👍"));
 bot.on("text", (ctx) => {
-console.log(ctx.message.chat, ctx.state);
-return ctx.telegram.sendMessage(
-    ctx.message.chat.id,
-    `Hello ${ctx.message.chat.username}`
-);
+    console.log(ctx.message.chat, ctx.state);
+    return ctx.telegram.sendMessage(
+        ctx.message.chat.id,
+        `Hello ${ctx.message.chat.username}`
+    );
+});
 // ctx.replyWithHTML("Yea")
 //     ctx.telegram.sendCopy(ctx.message.chat.id, ctx.message, keyboard)
 // });
