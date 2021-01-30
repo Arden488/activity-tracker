@@ -15,5 +15,11 @@
   "bugs": {
     "url": "https://github.com/Arden488/activity-tracker/issues"
   },
-  "homepage": "https://github.com/Arden488/activity-tracker#readme"
+  "homepage": "https://github.com/Arden488/activity-tracker#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "telegraf": "^4.0.2"
+  }
 }
