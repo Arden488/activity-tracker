@@ -32,7 +32,7 @@ function startDevMode(bot) {
 }
 
 function startProdMode(bot) {
-    bot.telegram.setWebhook(`${process.env.HEROKU_URL}/${path}`);
+    bot.telegram.setWebhook(`${process.env.HEROKU_URL}/${secretPath}`);
 
     bot.startWebhook(secretPath, null, PORT);
 }
