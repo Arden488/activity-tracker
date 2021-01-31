@@ -1,7 +1,7 @@
 import express from "express";
 import { Composer, Markup, Scenes, session, Telegraf } from "telegraf";
-import { runWizard } from "./wizard.js";
-import testScene from "./test.js";
+// import { runWizard } from "./wizard.js";
+// import testScene from "./test.js";
 
 const token = process.env.BOT_TOKEN;
 if (token === undefined) {
