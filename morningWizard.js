@@ -3,14 +3,14 @@ import { Composer, Markup, Scenes, session, Telegraf } from "telegraf";
 const stepHandler = new Composer();
 stepHandler.action("next", async (ctx) => {
     await ctx.reply(
-        "Hourly wizard: Step 2. Button",
+        "Morning wizard: Step 2. Button",
         Markup.inlineKeyboard([Markup.button.callback("➡️ Next", "next")])
     );
     return ctx.wizard.next();
 });
 stepHandler.command("next", async (ctx) => {
     await ctx.reply(
-        "Hourly wizard: Step 2. Command",
+        "Morning wizard: Step 2. Command",
         Markup.inlineKeyboard([Markup.button.callback("➡️ Next", "next")])
     );
     return ctx.wizard.next();
@@ -23,10 +23,10 @@ stepHandler.use((ctx) =>
 Scenes.WizardScene.prototype.enterMiddleware =
     Scenes.WizardScene.prototype.middleware;
 const wizard = new Scenes.WizardScene(
-    "hourly-wizard",
+    "morning-wizard",
     async (ctx) => {
         await ctx.reply(
-            "Hourly wizard: Step 1",
+            "Morning wizard: Step 1",
             Markup.inlineKeyboard([Markup.button.callback("➡️ Next", "next")])
         );
         return ctx.wizard.next();
@@ -34,7 +34,7 @@ const wizard = new Scenes.WizardScene(
     stepHandler,
     async (ctx) => {
         await ctx.reply(
-            "Hourly wizard: Step 3",
+            "Morning wizard: Step 3",
             Markup.inlineKeyboard([Markup.button.callback("➡️ Next", "next")])
         );
         return ctx.wizard.next();
