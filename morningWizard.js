@@ -34,9 +34,11 @@ const wizard = new Scenes.WizardScene(
     async (ctx) => {
         ctx.wizard.state.woke_up_at_night = ctx.message.text;
         // console.log(ctx.wizard.state);
-        await firestore
-            .collection("mornings")
-            .add({ datetime: Date.now(), ...ctx.wizard.state });
+        await firestore.collection("mornings").add({
+            datetime: Date.now(),
+            user_id: ctx.message.chat.id,
+            ...ctx.wizard.state,
+        });
         await ctx.reply("Готово");
         return await ctx.scene.leave();
     }

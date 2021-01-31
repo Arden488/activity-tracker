@@ -38,10 +38,13 @@ const wizard = new Scenes.WizardScene(
     },
     async (ctx) => {
         ctx.wizard.state.coffee = ctx.message.text;
-        // console.log();
         await firestore
             .collection("hourly")
-            .add({ datetime: Date.now(), ...ctx.wizard.state });
+            .add({
+                datetime: Date.now(),
+                user_id: ctx.message.chat.id,
+                ...ctx.wizard.state,
+            });
         await ctx.reply("Готово");
         return await ctx.scene.leave();
     }
