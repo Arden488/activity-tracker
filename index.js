@@ -9,7 +9,7 @@ if (token === undefined) {
 }
 
 const bot = new Telegraf(token);
-const path = "a98";
+const secretPath = "a98";
 const PORT = process.env.PORT || 3456;
 
 /******** */
@@ -33,4 +33,6 @@ function startDevMode(bot) {
 
 function startProdMode(bot) {
     bot.telegram.setWebhook(`${process.env.HEROKU_URL}/${path}`);
+
+    bot.startWebhook(secretPath, null, PORT);
 }
