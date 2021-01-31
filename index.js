@@ -1,36 +1,55 @@
-// import express from "express";
 import { Composer, Markup, Scenes, session, Telegraf } from "telegraf";
-// import { runWizard } from "./wizard.js";
-// import testScene from "./test.js";
+import hourlyWizard from "./hourlyWizard.js";
 
+/**
+ *
+ * BOT CREATION AND SETUP
+ *
+ */
 const token = process.env.BOT_TOKEN;
 if (token === undefined) {
     throw new Error("BOT_TOKEN must be provided!");
 }
 
+/**
+ *
+ * BOT HANDLERS
+ *
+ */
+
 const bot = new Telegraf(token);
+const stage = new Scenes.Stage([hourlyWizard]);
+
+bot.use(session());
+bot.use(stage.middleware());
+
+bot.command("text", (ctx) => {
+    return ctx.scene.enter("hourly-wizard");
+});
+
+bot.on("text", (ctx) => {
+    ctx.reply("k");
+});
+
+/**
+ *
+ * HOOK SETUP AND BOT LAUNCH
+ *
+ */
 const secretPath = "a98";
 const PORT = process.env.PORT || 3456;
 
-/******** */
-bot.on("text", (ctx) => ctx.reply("asd"));
-// bot.command("test", (ctx) => ctx.scene.enter("test"));
-// const stage = new Scenes.Stage([testScene]);
-/******** */
+const webhookSettings = {
+    webhook: {
+        domain: `${process.env.HEROKU_URL}/${secretPath}`,
+        port: PORT,
+    },
+};
 
-// bot.use(session());
-// bot.use(stage.middleware());
+const launchConfig =
+    process.env.NODE_ENV === "production" ? webhookSettings : {};
 
-bot.launch(
-    process.env.NODE_ENV === "production"
-        ? {
-              webhook: {
-                  domain: `${process.env.HEROKU_URL}/${secretPath}`,
-                  port: PORT,
-              },
-          }
-        : {}
-);
+bot.launch(launchConfig);
 
 // Enable graceful stop
 process.once("SIGINT", () => bot.stop("SIGINT"));
