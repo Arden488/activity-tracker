@@ -9,7 +9,7 @@ const wizard = new Scenes.WizardScene(
     "evening-wizard",
     async (ctx) => {
         ctx.wizard.state.started = true;
-        const keyboardOptions = Markup.keyboard([["Да", "Нет"]]);
+        const keyboardOptions = Markup.keyboard([["Да", "Нет"]]).oneTime();
         return replyWithQuestion(ctx, "Занимался спортом?", keyboardOptions);
     },
     async (ctx) => {
@@ -37,7 +37,7 @@ const wizard = new Scenes.WizardScene(
     },
     async (ctx) => {
         ctx.wizard.state.junk_food = ctx.message.text;
-        const keyboardOptions = Markup.keyboard([["Да", "Нет"]]);
+        const keyboardOptions = Markup.keyboard([["Да", "Нет"]]).oneTime();
         return replyWithQuestion(
             ctx,
             "Доволен ли тем как прошел день?",
@@ -54,13 +54,15 @@ const wizard = new Scenes.WizardScene(
     },
     async (ctx) => {
         ctx.wizard.state.notes = ctx.message.text;
-        // console.log(ctx.wizard.state);
         await firestore.collection("evenings").add({
             datetime: Date.now(),
             user_id: ctx.message.chat.id,
             ...ctx.wizard.state,
         });
-        await ctx.reply("Готово");
+        await ctx.reply(
+            "Готово",
+            Markup.keyboard([["/hourly", "/morning", "/evening"]])
+        );
         return await ctx.scene.leave();
     }
 );

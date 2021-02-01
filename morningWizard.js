@@ -10,11 +10,12 @@ const wizard = new Scenes.WizardScene(
     async (ctx) => {
         ctx.wizard.state.started = true;
         const keyboardOptions = Markup.keyboard([
-            ["До 7", "07:00", "07:30", "8:00"],
-            ["8:30", "9:00", "9:30", "10:00", "10:30"],
+            ["До 7", "07:00", "07:30"],
+            ["8:00", "8:30", "9:00"],
+            ["9:30", "10:00", "10:30"],
             ["11:00", "11:30", "12:00", "После 12"],
         ]);
-        return replyWithQuestion(ctx, "Во сколько проснулся?");
+        return replyWithQuestion(ctx, "Во сколько проснулся?", keyboardOptions);
     },
     async (ctx) => {
         ctx.wizard.state.hours_of_sleep = ctx.message.text;
@@ -54,13 +55,15 @@ const wizard = new Scenes.WizardScene(
     },
     async (ctx) => {
         ctx.wizard.state.woke_up_at_night = ctx.message.text;
-        // console.log(ctx.wizard.state);
         await firestore.collection("mornings").add({
             datetime: Date.now(),
             user_id: ctx.message.chat.id,
             ...ctx.wizard.state,
         });
-        await ctx.reply("Готово");
+        await ctx.reply(
+            "Готово",
+            Markup.keyboard([["/hourly", "/morning", "/evening"]])
+        );
         return await ctx.scene.leave();
     }
 );
