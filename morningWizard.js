@@ -9,27 +9,48 @@ const wizard = new Scenes.WizardScene(
     "morning-wizard",
     async (ctx) => {
         ctx.wizard.state.started = true;
+        const keyboardOptions = Markup.keyboard([
+            ["До 7", "07:00", "07:30", "8:00"],
+            ["8:30", "9:00", "9:30", "10:00", "10:30"],
+            ["11:00", "11:30", "12:00", "После 12"],
+        ]);
         return replyWithQuestion(ctx, "Во сколько проснулся?");
     },
     async (ctx) => {
         ctx.wizard.state.hours_of_sleep = ctx.message.text;
-        return replyWithQuestion(ctx, "Хорошо ли спалось?");
+        const keyboardOptions = Markup.keyboard([["Да", "Нет"]]);
+        return replyWithQuestion(ctx, "Хорошо ли спалось?", keyboardOptions);
     },
     async (ctx) => {
         ctx.wizard.state.good_or_bad_sleep = ctx.message.text;
-        return replyWithQuestion(ctx, "Снилось ли что-нибудь?");
+        const keyboardOptions = Markup.keyboard(["Нет"]);
+        return replyWithQuestion(
+            ctx,
+            "Снилось ли что-нибудь?",
+            keyboardOptions
+        );
     },
     async (ctx) => {
         ctx.wizard.state.dreams = ctx.message.text;
-        return replyWithQuestion(ctx, "Во сколько пошел спать?");
+        const keyboardOptions = Markup.keyboard([
+            ["До 10", "10:00", "10:30", "11:00"],
+            ["11:30", "12:00", "После 12"],
+        ]);
+        return replyWithQuestion(
+            ctx,
+            "Во сколько пошел спать?",
+            keyboardOptions
+        );
     },
     async (ctx) => {
         ctx.wizard.state.time_went_to_bed = ctx.message.text;
-        return replyWithQuestion(ctx, "Легко ли заснул?");
+        const keyboardOptions = Markup.keyboard([["Да", "Нет"]]);
+        return replyWithQuestion(ctx, "Легко ли заснул?", keyboardOptions);
     },
     async (ctx) => {
         ctx.wizard.state.easy_fall_asleep = ctx.message.text;
-        return replyWithQuestion(ctx, "Просыпался ли ночью?");
+        const keyboardOptions = Markup.keyboard([["Да", "Нет"]]);
+        return replyWithQuestion(ctx, "Просыпался ли ночью?", keyboardOptions);
     },
     async (ctx) => {
         ctx.wizard.state.woke_up_at_night = ctx.message.text;

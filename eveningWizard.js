@@ -9,7 +9,8 @@ const wizard = new Scenes.WizardScene(
     "evening-wizard",
     async (ctx) => {
         ctx.wizard.state.started = true;
-        return replyWithQuestion(ctx, "Занимался спортом?");
+        const keyboardOptions = Markup.keyboard([["Да", "Нет"]]);
+        return replyWithQuestion(ctx, "Занимался спортом?", keyboardOptions);
     },
     async (ctx) => {
         ctx.wizard.state.workout = ctx.message.text;
@@ -17,19 +18,31 @@ const wizard = new Scenes.WizardScene(
     },
     async (ctx) => {
         ctx.wizard.state.hours_working = ctx.message.text;
-        return replyWithQuestion(ctx, "Прочитал как минимум 10 страниц?");
+        const keyboardOptions = Markup.keyboard([["Да", "Нет"]]);
+        return replyWithQuestion(
+            ctx,
+            "Прочитал как минимум 10 страниц?",
+            keyboardOptions
+        );
     },
     async (ctx) => {
         ctx.wizard.state.pages_read = ctx.message.text;
-        return replyWithQuestion(ctx, "Кушал вовремя?");
+        const keyboardOptions = Markup.keyboard([["Да", "Нет"]]);
+        return replyWithQuestion(ctx, "Кушал вовремя?", keyboardOptions);
     },
     async (ctx) => {
         ctx.wizard.state.eat_in_time = ctx.message.text;
-        return replyWithQuestion(ctx, "Кушал junk-food?");
+        const keyboardOptions = Markup.keyboard([["Да", "Нет"]]);
+        return replyWithQuestion(ctx, "Кушал junk-food?", keyboardOptions);
     },
     async (ctx) => {
         ctx.wizard.state.junk_food = ctx.message.text;
-        return replyWithQuestion(ctx, "Доволен ли тем как прошел день?");
+        const keyboardOptions = Markup.keyboard([["Да", "Нет"]]);
+        return replyWithQuestion(
+            ctx,
+            "Доволен ли тем как прошел день?",
+            keyboardOptions
+        );
     },
     async (ctx) => {
         ctx.wizard.state.satisfied = ctx.message.text;

@@ -10,39 +10,57 @@ const wizard = new Scenes.WizardScene(
     "hourly-wizard",
     async (ctx) => {
         ctx.wizard.state.started = true;
-        const keyboardOptions = Markup.inlineKeyboard([
-            "0",
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
+        const keyboardOptions = Markup.keyboard([
+            ["0", "1", "2", "3", "4", "5"],
         ]);
         return replyWithQuestion(ctx, "Энергия (от 0 до 5)?", keyboardOptions);
     },
     async (ctx) => {
         ctx.wizard.state.energy = ctx.message.text;
-        return replyWithQuestion(ctx, "Настроение (от 0 до 5)?");
+        const keyboardOptions = Markup.keyboard([
+            ["0", "1", "2", "3", "4", "5"],
+        ]);
+        return replyWithQuestion(
+            ctx,
+            "Настроение (от 0 до 5)?",
+            keyboardOptions
+        );
     },
     async (ctx) => {
         ctx.wizard.state.mood = ctx.message.text;
-        return replyWithQuestion(ctx, "Где находился этот час?");
+        const keyboardOptions = Markup.keyboard([
+            // Markup.button.locationRequest("Send location"),
+            "Пропустить",
+        ]);
+        return replyWithQuestion(
+            ctx,
+            "Где находился этот час?",
+            keyboardOptions
+        );
     },
     async (ctx) => {
         ctx.wizard.state.location = ctx.message.text;
-        return replyWithQuestion(ctx, "Чем занимался этот час?");
+        const keyboardOptions = Markup.keyboard(["Пропустить"]);
+        return replyWithQuestion(
+            ctx,
+            "Чем занимался этот час?",
+            keyboardOptions
+        );
     },
     async (ctx) => {
         ctx.wizard.state.activity = ctx.message.text;
-        return replyWithQuestion(ctx, "Что кушал?");
+        const keyboardOptions = Markup.keyboard(["Ничего"]);
+        return replyWithQuestion(ctx, "Что кушал?", keyboardOptions);
     },
     async (ctx) => {
         ctx.wizard.state.eat = ctx.message.text;
-        return replyWithQuestion(ctx, "Пил ли воду?");
+        const keyboardOptions = Markup.keyboard([["Да", "Нет"]]);
+        return replyWithQuestion(ctx, "Пил ли воду?", keyboardOptions);
     },
     async (ctx) => {
         ctx.wizard.state.water = ctx.message.text;
-        return replyWithQuestion(ctx, "Пил ли кофе?");
+        const keyboardOptions = Markup.keyboard([["Да", "Нет"]]);
+        return replyWithQuestion(ctx, "Пил ли кофе?", keyboardOptions);
     },
     async (ctx) => {
         ctx.wizard.state.coffee = ctx.message.text;
@@ -51,7 +69,10 @@ const wizard = new Scenes.WizardScene(
             user_id: ctx.message.chat.id,
             ...ctx.wizard.state,
         });
-        await ctx.reply("Готово");
+        ctx.reply(
+            "Готово",
+            Markup.keyboard([["/hourly", "/morning", "/evening"]])
+        );
         return await ctx.scene.leave();
     }
 );
