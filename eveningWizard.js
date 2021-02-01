@@ -9,35 +9,35 @@ const wizard = new Scenes.WizardScene(
     "evening-wizard",
     async (ctx) => {
         ctx.wizard.state.started = true;
-        return replyWithQuestion("Занимался спортом?", ctx);
+        return replyWithQuestion(ctx, "Занимался спортом?");
     },
     async (ctx) => {
         ctx.wizard.state.workout = ctx.message.text;
-        return replyWithQuestion("Сколько часов работал?", ctx);
+        return replyWithQuestion(ctx, "Сколько часов работал?");
     },
     async (ctx) => {
         ctx.wizard.state.hours_working = ctx.message.text;
-        return replyWithQuestion("Прочитал как минимум 10 страниц?", ctx);
+        return replyWithQuestion(ctx, "Прочитал как минимум 10 страниц?");
     },
     async (ctx) => {
         ctx.wizard.state.pages_read = ctx.message.text;
-        return replyWithQuestion("Кушал вовремя?", ctx);
+        return replyWithQuestion(ctx, "Кушал вовремя?");
     },
     async (ctx) => {
         ctx.wizard.state.eat_in_time = ctx.message.text;
-        return replyWithQuestion("Кушал junk-food?", ctx);
+        return replyWithQuestion(ctx, "Кушал junk-food?");
     },
     async (ctx) => {
         ctx.wizard.state.junk_food = ctx.message.text;
-        return replyWithQuestion("Доволен ли тем как прошел день?", ctx);
+        return replyWithQuestion(ctx, "Доволен ли тем как прошел день?");
     },
     async (ctx) => {
         ctx.wizard.state.satisfied = ctx.message.text;
-        return replyWithQuestion("Что самое важное произошло за день?", ctx);
+        return replyWithQuestion(ctx, "Что самое важное произошло за день?");
     },
     async (ctx) => {
         ctx.wizard.state.important = ctx.message.text;
-        return replyWithQuestion("Есть чем поделиться?", ctx);
+        return replyWithQuestion(ctx, "Есть чем поделиться?");
     },
     async (ctx) => {
         ctx.wizard.state.notes = ctx.message.text;

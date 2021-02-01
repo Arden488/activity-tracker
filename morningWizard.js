@@ -9,27 +9,27 @@ const wizard = new Scenes.WizardScene(
     "morning-wizard",
     async (ctx) => {
         ctx.wizard.state.started = true;
-        return replyWithQuestion("Во сколько проснулся?", ctx);
+        return replyWithQuestion(ctx, "Во сколько проснулся?");
     },
     async (ctx) => {
         ctx.wizard.state.hours_of_sleep = ctx.message.text;
-        return replyWithQuestion("Хорошо ли спалось?", ctx);
+        return replyWithQuestion(ctx, "Хорошо ли спалось?");
     },
     async (ctx) => {
         ctx.wizard.state.good_or_bad_sleep = ctx.message.text;
-        return replyWithQuestion("Снилось ли что-нибудь?", ctx);
+        return replyWithQuestion(ctx, "Снилось ли что-нибудь?");
     },
     async (ctx) => {
         ctx.wizard.state.dreams = ctx.message.text;
-        return replyWithQuestion("Во сколько пошел спать?", ctx);
+        return replyWithQuestion(ctx, "Во сколько пошел спать?");
     },
     async (ctx) => {
         ctx.wizard.state.time_went_to_bed = ctx.message.text;
-        return replyWithQuestion("Легко ли заснул?", ctx);
+        return replyWithQuestion(ctx, "Легко ли заснул?");
     },
     async (ctx) => {
         ctx.wizard.state.easy_fall_asleep = ctx.message.text;
-        return replyWithQuestion("Просыпался ли ночью?", ctx);
+        return replyWithQuestion(ctx, "Просыпался ли ночью?");
     },
     async (ctx) => {
         ctx.wizard.state.woke_up_at_night = ctx.message.text;
