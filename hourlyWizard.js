@@ -10,9 +10,14 @@ const wizard = new Scenes.WizardScene(
     "hourly-wizard",
     async (ctx) => {
         ctx.wizard.state.started = true;
-        const keyboardOptions = {
-            ...Markup.inlineKeyboard(["0", "1", "2", "3", "4", "5"]),
-        };
+        const keyboardOptions = Markup.inlineKeyboard([
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+        ]);
         return replyWithQuestion(ctx, "Энергия (от 0 до 5)?", keyboardOptions);
     },
     async (ctx) => {
