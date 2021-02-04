@@ -20,7 +20,7 @@ const wizard = new Scenes.WizardScene(
     async (ctx) => {
         ctx.wizard.state.hours_of_sleep = ctx.message.text;
         const keyboardOptions = Markup.keyboard([["Да", "Нет"]]);
-        return replyWithQuestion(ctx, "Хорошо ли спалось?", keyboardOptions);
+        return replyWithQuestion(ctx, "Выспался?", keyboardOptions);
     },
     async (ctx) => {
         ctx.wizard.state.good_or_bad_sleep = ctx.message.text;
