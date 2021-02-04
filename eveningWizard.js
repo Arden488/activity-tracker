@@ -1,6 +1,6 @@
 import { Composer, Markup, Scenes, session, Telegraf } from "telegraf";
 import { firestore } from "./firestore.js";
-import { replyWithQuestion } from "./helpers.js";
+import { replyWithQuestion, setSchedule } from "./helpers.js";
 
 // Temp hack - https://github.com/telegraf/telegraf/issues/1333
 Scenes.WizardScene.prototype.enterMiddleware =
@@ -59,6 +59,9 @@ const wizard = new Scenes.WizardScene(
             user_id: ctx.message.chat.id,
             ...ctx.wizard.state,
         });
+
+        setSchedule(false);
+
         await ctx.reply(
             "Готово",
             Markup.keyboard([["/hourly", "/morning", "/evening"]])
