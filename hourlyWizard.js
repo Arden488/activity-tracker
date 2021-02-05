@@ -27,18 +27,6 @@ const wizard = new Scenes.WizardScene(
         );
     },
     async (ctx) => {
-        ctx.wizard.state.mood = ctx.message.text;
-        const keyboardOptions = Markup.keyboard([
-            // Markup.button.locationRequest("Send location"),
-            "Пропустить",
-        ]);
-        return replyWithQuestion(
-            ctx,
-            "Где находился этот час?",
-            keyboardOptions
-        );
-    },
-    async (ctx) => {
         ctx.wizard.state.location = ctx.message.text;
         const keyboardOptions = Markup.keyboard(["Пропустить"]);
         return replyWithQuestion(
