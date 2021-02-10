@@ -27,30 +27,6 @@ const wizard = new Scenes.WizardScene(
         );
     },
     async (ctx) => {
-        ctx.wizard.state.location = ctx.message.text;
-        const keyboardOptions = Markup.keyboard(["Пропустить"]);
-        return replyWithQuestion(
-            ctx,
-            "Чем занимался этот час?",
-            keyboardOptions
-        );
-    },
-    async (ctx) => {
-        ctx.wizard.state.activity = ctx.message.text;
-        const keyboardOptions = Markup.keyboard(["Ничего"]);
-        return replyWithQuestion(ctx, "Что кушал?", keyboardOptions);
-    },
-    async (ctx) => {
-        ctx.wizard.state.eat = ctx.message.text;
-        const keyboardOptions = Markup.keyboard([["Да", "Нет"]]);
-        return replyWithQuestion(ctx, "Пил ли воду?", keyboardOptions);
-    },
-    async (ctx) => {
-        ctx.wizard.state.water = ctx.message.text;
-        const keyboardOptions = Markup.keyboard([["Да", "Нет"]]);
-        return replyWithQuestion(ctx, "Пил ли кофе?", keyboardOptions);
-    },
-    async (ctx) => {
         ctx.wizard.state.coffee = ctx.message.text;
         await firestore.collection("hourly").add({
             datetime: Date.now(),
