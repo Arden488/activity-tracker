@@ -27,7 +27,7 @@ const wizard = new Scenes.WizardScene(
         );
     },
     async (ctx) => {
-        ctx.wizard.state.coffee = ctx.message.text;
+        ctx.wizard.state.mood = ctx.message.text;
         await firestore.collection("hourly").add({
             datetime: Date.now(),
             user_id: ctx.message.chat.id,

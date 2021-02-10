@@ -45,7 +45,7 @@ const wizard = new Scenes.WizardScene(
         );
     },
     async (ctx) => {
-        ctx.wizard.state.water = ctx.message.text;
+        ctx.wizard.state.satisfied = ctx.message.text;
         const keyboardOptions = Markup.keyboard([
             ["0", "1", "2", "2+"],
         ]).oneTime();
@@ -67,7 +67,7 @@ const wizard = new Scenes.WizardScene(
         );
     },
     async (ctx) => {
-        ctx.wizard.state.satisfied = ctx.message.text;
+        ctx.wizard.state.coffee = ctx.message.text;
         return replyWithQuestion(ctx, "Что самое важное произошло за день?");
     },
     async (ctx) => {
