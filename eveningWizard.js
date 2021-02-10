@@ -45,6 +45,28 @@ const wizard = new Scenes.WizardScene(
         );
     },
     async (ctx) => {
+        ctx.wizard.state.water = ctx.message.text;
+        const keyboardOptions = Markup.keyboard([
+            ["0", "1", "2", "2+"],
+        ]).oneTime();
+        return replyWithQuestion(
+            ctx,
+            "Сколько выпил бутылок воды?",
+            keyboardOptions
+        );
+    },
+    async (ctx) => {
+        ctx.wizard.state.water = ctx.message.text;
+        const keyboardOptions = Markup.keyboard([
+            ["0", "1", "2", "2+"],
+        ]).oneTime();
+        return replyWithQuestion(
+            ctx,
+            "Сколько выпил чашек кофе?",
+            keyboardOptions
+        );
+    },
+    async (ctx) => {
         ctx.wizard.state.satisfied = ctx.message.text;
         return replyWithQuestion(ctx, "Что самое важное произошло за день?");
     },
