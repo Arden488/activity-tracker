@@ -14,7 +14,16 @@ const wizard = new Scenes.WizardScene(
     },
     async (ctx) => {
         ctx.wizard.state.workout = ctx.message.text;
-        return replyWithQuestion(ctx, "Сколько часов работал?");
+        const keyboardOptions = Markup.keyboard([
+            ["0", "1", "2"],
+            ["3", "4", "5"],
+            ["6", "7", "8"],
+        ]);
+        return replyWithQuestion(
+            ctx,
+            "Сколько часов работал?",
+            keyboardOptions
+        );
     },
     async (ctx) => {
         ctx.wizard.state.hours_working = ctx.message.text;
@@ -68,11 +77,23 @@ const wizard = new Scenes.WizardScene(
     },
     async (ctx) => {
         ctx.wizard.state.coffee = ctx.message.text;
-        return replyWithQuestion(ctx, "Что самое важное произошло за день?");
+        const keyboardOptions = Markup.keyboard([
+            ["Ничего/Не хочу отвечать/Затрудняюсь"],
+        ]).oneTime();
+        return replyWithQuestion(
+            ctx,
+            "Что самое важное произошло за день?",
+            keyboardOptions
+        );
     },
     async (ctx) => {
         ctx.wizard.state.important = ctx.message.text;
-        return replyWithQuestion(ctx, "Есть чем поделиться?");
+        const keyboardOptions = Markup.keyboard([["Нет"]]).oneTime();
+        return replyWithQuestion(
+            ctx,
+            "Хочешь чем-нибудь поделиться?",
+            keyboardOptions
+        );
     },
     async (ctx) => {
         ctx.wizard.state.notes = ctx.message.text;
