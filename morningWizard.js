@@ -24,7 +24,11 @@ const wizard = new Scenes.WizardScene(
     },
     async (ctx) => {
         ctx.wizard.state.good_or_bad_sleep = ctx.message.text;
-        const keyboardOptions = Markup.keyboard(["Нет"]);
+        const keyboardOptions = Markup.keyboard([
+            "Нет",
+            "Да, но не помню",
+            "Да, но не хочу писать",
+        ]);
         return replyWithQuestion(
             ctx,
             "Снилось ли что-нибудь?",
@@ -53,8 +57,18 @@ const wizard = new Scenes.WizardScene(
         const keyboardOptions = Markup.keyboard([["Да", "Нет"]]);
         return replyWithQuestion(ctx, "Просыпался ли ночью?", keyboardOptions);
     },
+
     async (ctx) => {
         ctx.wizard.state.woke_up_at_night = ctx.message.text;
+        const keyboardOptions = Markup.keyboard([["Да", "Нет"]]);
+        return replyWithQuestion(
+            ctx,
+            "Пил ли воду за 2 часа до сна?",
+            keyboardOptions
+        );
+    },
+    async (ctx) => {
+        ctx.wizard.state.drank_water_late = ctx.message.text;
         await firestore.collection("mornings").add({
             datetime: Date.now(),
             user_id: ctx.message.chat.id,
