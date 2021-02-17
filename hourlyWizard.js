@@ -11,23 +11,38 @@ const wizard = new Scenes.WizardScene(
     async (ctx) => {
         ctx.wizard.state.started = true;
         const keyboardOptions = Markup.keyboard([
-            ["0", "1", "2", "3", "4", "5"],
-        ]);
-        return replyWithQuestion(ctx, "Энергия (от 0 до 5)?", keyboardOptions);
-    },
-    async (ctx) => {
-        ctx.wizard.state.energy = ctx.message.text;
-        const keyboardOptions = Markup.keyboard([
-            ["0", "1", "2", "3", "4", "5"],
+            [
+                "0 - 😵 - Чувствую сильную усталость",
+                "1 - 🤭 - Чувствую усталость, но не сильную",
+                "2 - 😐 - Не чувствую особой усталости, но и нет энергичности",
+                "3 - 😎 - Чувствую прилив сил и хочется что-то делать",
+            ],
         ]);
         return replyWithQuestion(
             ctx,
-            "Настроение (от 0 до 5)?",
+            "Насколько ты чувствуешь себя уставшим?",
             keyboardOptions
         );
     },
     async (ctx) => {
-        ctx.wizard.state.mood = ctx.message.text;
+        ctx.wizard.state.fatigue = ctx.message.text.slice(0, 1);
+        const keyboardOptions = Markup.keyboard([
+            [
+                "0 - 💩 - Ужасное настроение, жизнь говно",
+                "1 - 🙁 - Не в духе, но не критично",
+                "2 - 🙄 - Затрудняюсь ответить или нейтрально",
+                "3 - 🙂 - Всё хорошо, я оптимистичен",
+                "4 - 🤩 - Жизнь прекрасна!",
+            ],
+        ]);
+        return replyWithQuestion(
+            ctx,
+            "Какое у тебя настроение?",
+            keyboardOptions
+        );
+    },
+    async (ctx) => {
+        ctx.wizard.state.mood = ctx.message.text.slice(0, 1);
         await firestore.collection("hourly").add({
             datetime: Date.now(),
             user_id: ctx.message.chat.id,
