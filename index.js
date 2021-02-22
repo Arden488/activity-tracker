@@ -1,3 +1,5 @@
+import express from "express";
+import localtunnel from "localtunnel";
 import { Composer, Markup, Scenes, session, Telegraf } from "telegraf";
 import { registerHandlers } from "./handlers.js";
 
@@ -29,18 +31,31 @@ registerHandlers(bot);
 const secretPath = "a98";
 const PORT = process.env.PORT || 3456;
 
-const webhookSettings = {
-    webhook: {
-        domain: `${process.env.HEROKU_URL}/${secretPath}`,
-        port: PORT,
-    },
-};
+let tunnerUrl = `${process.env.HEROKU_URL}/${secretPath}`;
 
-const launchConfig =
-    process.env.NODE_ENV === "production" ? webhookSettings : {};
+if (process.env.NODE_ENV !== "production") {
+    const tunnel = await localtunnel({ port: PORT });
+    tunnerUrl = tunnel.url;
+}
 
-bot.launch(launchConfig);
+const webhook = `${tunnerUrl}/${secretPath}`;
+
+bot.telegram.setWebhook(webhook);
+
+// bot.launch(launchConfig);
+const app = express();
+app.get("/location/add", (req, res) => {
+    console.log(req);
+    return res.send("Test");
+});
+
+// Set the bot API endpoint
+app.use(bot.webhookCallback(`/${secretPath}`));
+
+app.listen(PORT, () => {
+    console.log(`App is listening on port ${PORT}!`);
+});
 
 // Enable graceful stop
-process.once("SIGINT", () => bot.stop("SIGINT"));
-process.once("SIGTERM", () => bot.stop("SIGTERM"));
+// process.once("SIGINT", () => bot.stop("SIGINT"));
+// process.once("SIGTERM", () => bot.stop("SIGTERM"));
