@@ -31,7 +31,7 @@ registerHandlers(bot);
 const secretPath = "a98";
 const PORT = process.env.PORT || 3456;
 
-let tunnerUrl = `${process.env.HEROKU_URL}/${secretPath}`;
+let tunnerUrl = `${process.env.HEROKU_URL}`;
 
 if (process.env.NODE_ENV !== "production") {
     const tunnel = await localtunnel({ port: PORT });
