@@ -1,6 +1,7 @@
 import express from "express";
 import localtunnel from "localtunnel";
 import bodyParser from "body-parser";
+import { firestore } from "./firestore.js";
 import { Composer, Markup, Scenes, session, Telegraf } from "telegraf";
 import { registerHandlers } from "./handlers.js";
 
