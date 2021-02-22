@@ -49,9 +49,8 @@ const app = express();
 app.use(bodyParser.json());
 
 app.post("/location/add", (req, res) => {
-    console.log(req.body);
+    await firestore.collection("locations").add(req.body);
     res.end();
-    // return res.send("Test");
 });
 
 app.post(`/${secretPath}`, (req, res) => {
