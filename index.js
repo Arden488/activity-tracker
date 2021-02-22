@@ -57,6 +57,10 @@ app.post("/location/add", (req, res) => {
 // Set the bot API endpoint
 app.use(bot.webhookCallback(`/${secretPath}`));
 
+app.post(`/${secretPath}`, (req, res) => {
+    return bot.handleUpdate(req.body, res);
+});
+
 app.listen(PORT, () => {
     console.log(`App is listening on port ${PORT}!`);
 });
