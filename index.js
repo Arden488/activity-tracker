@@ -48,7 +48,7 @@ const app = express();
 
 app.use(bodyParser.json());
 
-app.post("/location/add", (req, res) => {
+app.post("/location/add", async (req, res) => {
     await firestore.collection("locations").add(req.body);
     res.end();
 });
