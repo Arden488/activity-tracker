@@ -50,7 +50,7 @@ app.use(bodyParser.json());
 
 app.post("/location/add", (req, res) => {
     console.log(req.body);
-    response.end();
+    res.end();
     // return res.send("Test");
 });
 
