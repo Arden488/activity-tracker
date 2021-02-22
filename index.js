@@ -44,9 +44,13 @@ bot.telegram.setWebhook(webhook);
 
 // bot.launch(launchConfig);
 const app = express();
-app.get("/location/add", (req, res) => {
-    console.log(req);
-    return res.send("Test");
+
+app.use(express.bodyParser());
+
+app.post("/location/add", (req, res) => {
+    console.log(req.body);
+    response.end();
+    // return res.send("Test");
 });
 
 // Set the bot API endpoint
