@@ -1,5 +1,6 @@
 import express from "express";
 import localtunnel from "localtunnel";
+import bodyParser from "body-parser";
 import { Composer, Markup, Scenes, session, Telegraf } from "telegraf";
 import { registerHandlers } from "./handlers.js";
 
@@ -45,7 +46,7 @@ bot.telegram.setWebhook(webhook);
 // bot.launch(launchConfig);
 const app = express();
 
-app.use(express.bodyParser());
+app.use(bodyParser.json());
 
 app.post("/location/add", (req, res) => {
     console.log(req.body);
