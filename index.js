@@ -50,8 +50,10 @@ const app = express();
 app.use(bodyParser.json());
 
 app.post("/location/add", async (req, res) => {
-    await firestore.collection("locations").add(req.body);
-    res.end();
+    const firestore_response = await firestore
+        .collection("locations")
+        .add(req.body);
+    res.end(firestore_response.id);
 });
 
 app.get("/location/", async (req, res) => {
