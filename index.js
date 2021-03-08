@@ -54,6 +54,30 @@ app.post("/location/add", async (req, res) => {
     res.end();
 });
 
+app.get("/location/", async (req, res) => {
+    let entries = [];
+    const today = new Date().setHours(0, 0, 0, 0);
+    const ref = await firestore
+        .collection("locations")
+        .orderBy("location.timestamp")
+        .startAt(new Date(today).toISOString())
+        .limit(1000);
+    try {
+        const snapshot = await ref.get();
+        entries = snapshot.docs.map((doc) => {
+            return {
+                id: doc.id,
+                ...doc.data(),
+            };
+        });
+    } catch (e) {
+        console.error(e);
+        return;
+    }
+
+    res.json(entries);
+});
+
 app.post(`/${secretPath}`, (req, res) => {
     return bot.handleUpdate(req.body, res);
 });
