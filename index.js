@@ -46,6 +46,7 @@ bot.telegram.setWebhook(webhook);
 
 // bot.launch(launchConfig);
 const app = express();
+app.use(express.json({ limit: "50mb" }));
 
 app.use(bodyParser.json());
 
