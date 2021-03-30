@@ -56,6 +56,33 @@ app.post("/location/add", async (req, res) => {
     res.end(firestore_response.id);
 });
 
+app.post("/health/add", async (req, res) => {
+    const firestore_response = await firestore
+        .collection("health")
+        .add(req.body);
+    res.end(firestore_response.id);
+});
+
+app.get("/health/", async (req, res) => {
+    let entries = [];
+    const ref = await firestore.collection("health");
+
+    try {
+        const snapshot = await ref.get();
+        entries = snapshot.docs.map((doc) => {
+            return {
+                id: doc.id,
+                ...doc.data(),
+            };
+        });
+    } catch (e) {
+        console.error(e);
+        return;
+    }
+
+    res.json(entries);
+});
+
 app.get("/location/", async (req, res) => {
     let entries = [];
     const today = new Date().setHours(0, 0, 0, 0);
