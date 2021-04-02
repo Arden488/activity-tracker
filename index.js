@@ -58,9 +58,11 @@ app.post("/location/add", async (req, res) => {
 });
 
 app.post("/health/add", async (req, res) => {
+    let newData = req.body;
+    newData.datetime = new Date();
     const firestore_response = await firestore
         .collection("health")
-        .add(req.body);
+        .add(newData);
     res.end(firestore_response.id);
 });
 
