@@ -68,7 +68,12 @@ app.post("/health/add", async (req, res) => {
 
 app.get("/health/", async (req, res) => {
     let entries = [];
-    const ref = await firestore.collection("health");
+    const today = new Date().setHours(0, 0, 0, 0);
+    const ref = await firestore
+        .collection("health")
+        .orderBy("datetime")
+        .startAt(new Date(today).toISOString())
+        .limit(1);
 
     try {
         const snapshot = await ref.get();
