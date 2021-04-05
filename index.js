@@ -63,6 +63,11 @@ app.post("/health/add", async (req, res) => {
     const firestore_response = await firestore
         .collection("health")
         .add(newData);
+
+    console.log(firestore_response);
+    if (firestore_response)
+        bot.telegram.sendMessage(users[0].id, `Сохранил данные о здоровье`);
+
     res.end(firestore_response.id);
 });
 
