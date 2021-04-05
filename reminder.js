@@ -1,5 +1,4 @@
 import { Composer, Markup, Scenes, session, Telegraf } from "telegraf";
-import { users } from "./users";
 import { firestore } from "./firestore.js";
 
 /**
@@ -28,7 +27,7 @@ const reminderDocSnapshot = await firestore
 const { hourly, active } = reminderDocSnapshot.data();
 
 if (active && hourly) {
-    bot.telegram.sendMessage(users[0].id, `Затрекай данные 👊`);
+    bot.telegram.sendMessage(process.env.USER1_ID, `Затрекай данные 👊`);
 }
 
 setTimeout(() => {

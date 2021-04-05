@@ -4,7 +4,6 @@ import bodyParser from "body-parser";
 import { firestore } from "./firestore.js";
 import { Composer, Markup, Scenes, session, Telegraf } from "telegraf";
 import { registerHandlers } from "./handlers.js";
-import { users } from "./users";
 
 /**
  *
@@ -66,11 +65,14 @@ app.post("/health/add", async (req, res) => {
         .add(newData);
 
     if (firestore_response.id) {
-        bot.telegram.sendMessage(users[0].id, `Сохранил данные о здоровье`);
+        bot.telegram.sendMessage(
+            process.env.USER1_ID,
+            `Сохранил данные о здоровье`
+        );
         res.end(firestore_response.id);
     } else {
         bot.telegram.sendMessage(
-            users[0].id,
+            process.env.USER1_ID,
             `Произошла ошибка при сохранении данных о здоровье`
         );
     }
