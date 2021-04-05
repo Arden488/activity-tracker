@@ -1,4 +1,5 @@
 import { Composer, Markup, Scenes, session, Telegraf } from "telegraf";
+import { users } from "./users";
 import { firestore } from "./firestore.js";
 
 /**
@@ -18,11 +19,6 @@ if (token === undefined) {
  */
 
 const bot = new Telegraf(token);
-
-const users = [
-    { id: 37053287, username: "Arden488" },
-    // { id: 14379256, username: "Saldeia" },
-];
 
 const reminderDocSnapshot = await firestore
     .collection("config")
