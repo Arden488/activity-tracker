@@ -44,10 +44,7 @@ const wizard = new Scenes.WizardScene(
             user_id: ctx.message.chat.id,
             ...ctx.wizard.state,
         });
-        ctx.reply(
-            "Готово",
-            Markup.keyboard([["/hourly", "/morning", "/evening"]])
-        );
+        ctx.reply("Готово", Markup.keyboard([["/hourly", "/evening"]]));
         return await ctx.scene.leave();
     }
 );

@@ -8,8 +8,8 @@ export const registerHandlers = (bot) => {
     bot.use(session());
     bot.use(stage.middleware());
 
-    bot.command("morning", (ctx) => {
-        return ctx.scene.enter("morning-wizard");
+    bot.command("hourly", (ctx) => {
+        return ctx.scene.enter("hourly-wizard");
     });
     bot.command("evening", (ctx) => {
         return ctx.scene.enter("evening-wizard");
