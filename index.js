@@ -1,4 +1,5 @@
 import express from "express";
+import * as fs from 'fs';
 import localtunnel from "localtunnel";
 import bodyParser from "body-parser";
 import { firestore } from "./firestore.js";
@@ -33,7 +34,7 @@ registerHandlers(bot);
 const secretPath = "a98";
 const PORT = process.env.PORT || 3456;
 
-let tunnerUrl = `${process.env.HEROKU_URL}`;
+let tunnerUrl = `${process.env.SERVER_URL}`;
 
 if (process.env.NODE_ENV !== "production") {
     const tunnel = await localtunnel({ port: PORT });
@@ -59,6 +60,15 @@ app.post("/location/add", async (req, res) => {
 
 app.post("/health/add", async (req, res) => {
     let newData = req.body;
+
+    const logFileName = `${new Date().toJSON()}.json`;
+    fs.writeFile(`./log/${logFileName}`, JSON.stringify(newData), function(err) {
+        if(err) {
+            return console.log(err);
+        }
+        console.log("The log file was saved!");
+    }); 
+
     newData.datetime = new Date();
     const firestore_response = await firestore
         .collection("health")
@@ -80,12 +90,12 @@ app.post("/health/add", async (req, res) => {
 
 app.get("/health/", async (req, res) => {
     let entries = [];
-    const today = new Date().setHours(0, 0, 0, 0);
+    //const today = new Date().setHours(0, 0, 0, 0);
     const ref = await firestore
         .collection("health")
-        .orderBy("datetime")
-        .startAt(new Date(today).toISOString())
-        .limit(1);
+        .orderBy("datetime", "desc")
+        //.startAt(new Date(today).toISOString())
+        .limit(10);
 
     try {
         const snapshot = await ref.get();
