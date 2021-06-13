@@ -1,5 +1,6 @@
 import express from "express";
 import * as fs from "fs";
+import { compareAsc, format } from "date-fns";
 import localtunnel from "localtunnel";
 import bodyParser from "body-parser";
 import { firestore } from "./firestore.js";
@@ -59,25 +60,16 @@ app.post("/location/add", async (req, res) => {
 });
 
 app.post("/health/add", async (req, res) => {
-  let newData = req.body;
+  let data = req.body.data;
 
-  logDataToFile(newData);
+  logDataToFile(data);
 
-  newData.datetime = new Date();
-  const firestore_response = await firestore.collection("health").add(newData);
-
-  if (firestore_response.id) {
-    bot.telegram.sendMessage(
-      process.env.USER1_ID,
-      `Сохранил данные о здоровье`
-    );
-    res.end(firestore_response.id);
-  } else {
-    bot.telegram.sendMessage(
-      process.env.USER1_ID,
-      `Произошла ошибка при сохранении данных о здоровье`
-    );
+  const response = storeHealthExportData(data);
+  if (response) {
+    notifyTelegram(response);
   }
+
+  res.end();
 });
 
 app.get("/health/", async (req, res) => {
@@ -134,14 +126,63 @@ app.listen(PORT, () => {
   console.log(`App is listening on port ${PORT}!`);
 });
 
-function logDataToFile(newData) {
+function logDataToFile(data) {
   const logFileName = `${new Date().toJSON()}.json`;
-  fs.writeFile(`./log/${logFileName}`, JSON.stringify(newData), (err) => {
+  fs.writeFile(`./log/${logFileName}`, JSON.stringify(data), (err) => {
     if (err) {
       return console.log(err);
     }
     console.log("The log file was saved!");
   });
+}
+
+async function storeHealthExportData(data) {
+  const metricsData = data.metrics;
+
+  const batch = firestore.batch();
+  data.datetime = new Date();
+
+  metricsData.forEach((category) => {
+    const { name, units, data } = category;
+    if (data.length === 0) return;
+
+    const dataAggr = {};
+    const dateInfo = {};
+
+    data.forEach((item) => {
+      const datetime = new Date(item.date);
+      const date = format(datetime, "MM.dd.yyyy");
+
+      if (!dateInfo.start || compareAsc(datetime, dateInfo.start) === -1) {
+        dateInfo.start = datetime;
+      }
+      if (!dateInfo.end || compareAsc(datetime, dateInfo.end) === 1) {
+        dateInfo.end = datetime;
+      }
+
+      if (!(date in dataAggr)) dataAggr[date] = [];
+      dataAggr[date].push(item);
+    });
+
+    const catRef = firestore.collection(name).doc();
+    batch.set(catRef, { ...dataAggr, datetime: dateInfo });
+  });
+
+  return await batch.commit();
+}
+
+function notifyTelegram(response) {
+  if (response) {
+    bot.telegram.sendMessage(
+      process.env.USER1_ID,
+      `Сохранил данные о здоровье`
+    );
+  } else {
+    bot.telegram.sendMessage(
+      process.env.USER1_ID,
+      `Произошла ошибка при сохранении данных о здоровье`
+    );
+  }
 }
 // Enable graceful stop
 // process.once("SIGINT", () => bot.stop("SIGINT"));
