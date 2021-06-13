@@ -1,5 +1,5 @@
 import express from "express";
-import * as fs from 'fs';
+import * as fs from "fs";
 import localtunnel from "localtunnel";
 import bodyParser from "body-parser";
 import { firestore } from "./firestore.js";
@@ -13,7 +13,7 @@ import { registerHandlers } from "./handlers.js";
  */
 const token = process.env.BOT_TOKEN;
 if (token === undefined) {
-    throw new Error("BOT_TOKEN must be provided!");
+  throw new Error("BOT_TOKEN must be provided!");
 }
 
 /**
@@ -37,8 +37,8 @@ const PORT = process.env.PORT || 3456;
 let tunnerUrl = `${process.env.SERVER_URL}`;
 
 if (process.env.NODE_ENV !== "production") {
-    const tunnel = await localtunnel({ port: PORT });
-    tunnerUrl = tunnel.url;
+  const tunnel = await localtunnel({ port: PORT });
+  tunnerUrl = tunnel.url;
 }
 
 const webhook = `${tunnerUrl}/${secretPath}`;
@@ -52,102 +52,97 @@ app.use(express.json({ limit: "50mb" }));
 app.use(bodyParser.json());
 
 app.post("/location/add", async (req, res) => {
-    const firestore_response = await firestore
-        .collection("locations")
-        .add(req.body);
-    res.end(firestore_response.id);
+  const firestore_response = await firestore
+    .collection("locations")
+    .add(req.body);
+  res.end(firestore_response.id);
 });
 
 app.post("/health/add", async (req, res) => {
-    let newData = req.body;
+  let newData = req.body;
 
-    const logFileName = `${new Date().toJSON()}.json`;
-    fs.writeFile(`./log/${logFileName}`, JSON.stringify(newData), function(err) {
-        if(err) {
-            return console.log(err);
-        }
-        console.log("The log file was saved!");
-    }); 
+  logDataToFile(newData);
 
-    newData.datetime = new Date();
-    const firestore_response = await firestore
-        .collection("health")
-        .add(newData);
+  newData.datetime = new Date();
+  const firestore_response = await firestore.collection("health").add(newData);
 
-    if (firestore_response.id) {
-        bot.telegram.sendMessage(
-            process.env.USER1_ID,
-            `Сохранил данные о здоровье`
-        );
-        res.end(firestore_response.id);
-    } else {
-        bot.telegram.sendMessage(
-            process.env.USER1_ID,
-            `Произошла ошибка при сохранении данных о здоровье`
-        );
-    }
+  if (firestore_response.id) {
+    bot.telegram.sendMessage(
+      process.env.USER1_ID,
+      `Сохранил данные о здоровье`
+    );
+    res.end(firestore_response.id);
+  } else {
+    bot.telegram.sendMessage(
+      process.env.USER1_ID,
+      `Произошла ошибка при сохранении данных о здоровье`
+    );
+  }
 });
 
 app.get("/health/", async (req, res) => {
-    let entries = [];
-    //const today = new Date().setHours(0, 0, 0, 0);
-    const ref = await firestore
-        .collection("health")
-        .orderBy("datetime", "desc")
-        //.startAt(new Date(today).toISOString())
-        .limit(10);
+  let entries = [];
+  //const today = new Date().setHours(0, 0, 0, 0);
+  const ref = await firestore
+    .collection("health")
+    .orderBy("datetime", "desc")
+    //.startAt(new Date(today).toISOString())
+    .limit(10);
 
-    try {
-        const snapshot = await ref.get();
-        entries = snapshot.docs.map((doc) => {
-            return {
-                id: doc.id,
-                ...doc.data(),
-            };
-        });
-    } catch (e) {
-        console.error(e);
-        return;
-    }
+  try {
+    const snapshot = await ref.get();
+    entries = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+  } catch (e) {
+    console.error(e);
+    return;
+  }
 
-    res.json(entries);
+  res.json(entries);
 });
 
 app.get("/location/", async (req, res) => {
-    let entries = [];
-    const today = new Date().setHours(0, 0, 0, 0);
-    const ref = await firestore
-        .collection("locations")
-        .orderBy("location.timestamp")
-        .startAt(new Date(today).toISOString())
-        .limit(1000);
-    try {
-        const snapshot = await ref.get();
-        entries = snapshot.docs.map((doc) => {
-            return {
-                id: doc.id,
-                ...doc.data(),
-            };
-        });
-    } catch (e) {
-        console.error(e);
-        return;
-    }
+  let entries = [];
+  const today = new Date().setHours(0, 0, 0, 0);
+  const ref = await firestore
+    .collection("locations")
+    .orderBy("location.timestamp")
+    .startAt(new Date(today).toISOString())
+    .limit(1000);
+  try {
+    const snapshot = await ref.get();
+    entries = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+  } catch (e) {
+    console.error(e);
+    return;
+  }
 
-    res.json(entries);
+  res.json(entries);
 });
 
-app.post(`/${secretPath}`, (req, res) => {
-    return bot.handleUpdate(req.body, res);
-});
+app.post(`/${secretPath}`, (req, res) => bot.handleUpdate(req.body, res));
 
 // Set the bot API endpoint
 app.use(bot.webhookCallback(`/${secretPath}`));
 
 app.listen(PORT, () => {
-    console.log(`App is listening on port ${PORT}!`);
+  console.log(`App is listening on port ${PORT}!`);
 });
 
+function logDataToFile(newData) {
+  const logFileName = `${new Date().toJSON()}.json`;
+  fs.writeFile(`./log/${logFileName}`, JSON.stringify(newData), (err) => {
+    if (err) {
+      return console.log(err);
+    }
+    console.log("The log file was saved!");
+  });
+}
 // Enable graceful stop
 // process.once("SIGINT", () => bot.stop("SIGINT"));
 // process.once("SIGTERM", () => bot.stop("SIGTERM"));
