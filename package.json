@@ -9,7 +9,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node -r dotenv/config index.js",
-    "dev": "nodemon -r dotenv/config index.js",
+    "dev": "nodemon -r dotenv/config --ignore 'log/*' index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
