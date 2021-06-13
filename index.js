@@ -147,25 +147,39 @@ async function storeHealthExportData(data) {
     if (data.length === 0) return;
 
     const dataAggr = {};
-    const dateInfo = {};
 
     data.forEach((item) => {
       const datetime = new Date(item.date);
-      const date = format(datetime, "MM.dd.yyyy");
+      const date = format(datetime, "dd.MM.yyyy");
 
-      if (!dateInfo.start || compareAsc(datetime, dateInfo.start) === -1) {
-        dateInfo.start = datetime;
+      if (!(date in dataAggr))
+        dataAggr[date] = {
+          datetime: {},
+          data: [],
+        };
+
+      const dataByDate = dataAggr[date];
+
+      if (
+        !dataByDate.datetime.start ||
+        compareAsc(datetime, dataByDate.datetime.start) === -1
+      ) {
+        dataByDate.datetime.start = datetime;
       }
-      if (!dateInfo.end || compareAsc(datetime, dateInfo.end) === 1) {
-        dateInfo.end = datetime;
+      if (
+        !dataByDate.datetime.end ||
+        compareAsc(datetime, dataByDate.datetime.end) === 1
+      ) {
+        dataByDate.datetime.end = datetime;
       }
 
-      if (!(date in dataAggr)) dataAggr[date] = [];
-      dataAggr[date].push(item);
+      dataByDate.data.push(item);
     });
 
-    const catRef = firestore.collection(name).doc();
-    batch.set(catRef, { ...dataAggr, datetime: dateInfo });
+    for (let dataDate in dataAggr) {
+      const catRef = firestore.collection(name).doc();
+      batch.set(catRef, dataAggr[dataDate]);
+    }
   });
 
   return await batch.commit();
