@@ -64,9 +64,17 @@ app.post("/health/add", async (req, res) => {
 
   logDataToFile(data);
 
-  const response = storeHealthExportData(data);
-  if (response) {
-    notifyTelegram(response);
+  const tData = transformHealthExportData(data);
+  const isAlreadySaved = await checkIfSaved(tData);
+  if (!isAlreadySaved) {
+    const response = await storeHealthExportData(tData);
+    if (response) {
+      notifyTelegram("Сохранил данные о здоровье");
+    }
+  } else {
+    notifyTelegram(
+      "Попытка сохранить данные о здоровье, которые уже есть в базе"
+    );
   }
 
   res.end();
@@ -136,29 +144,31 @@ function logDataToFile(data) {
   });
 }
 
-async function storeHealthExportData(data) {
+function transformHealthExportData(data) {
   const metricsData = data.metrics;
 
-  const batch = firestore.batch();
-  data.datetime = new Date();
+  // const transformedData = [];
+  const dataAggr = {};
 
   metricsData.forEach((category) => {
     const { name, units, data } = category;
     if (data.length === 0) return;
 
-    const dataAggr = {};
-
     data.forEach((item) => {
       const datetime = new Date(item.date);
       const date = format(datetime, "dd.MM.yyyy");
 
-      if (!(date in dataAggr))
-        dataAggr[date] = {
+      if (!(date in dataAggr)) {
+        dataAggr[date] = {};
+      }
+      if (!(name in dataAggr[date])) {
+        dataAggr[date][name] = {
           datetime: {},
           data: [],
         };
+      }
 
-      const dataByDate = dataAggr[date];
+      const dataByDate = dataAggr[date][name];
 
       if (
         !dataByDate.datetime.start ||
@@ -176,27 +186,60 @@ async function storeHealthExportData(data) {
       dataByDate.data.push(item);
     });
 
-    for (let dataDate in dataAggr) {
-      const catRef = firestore.collection(name).doc();
-      batch.set(catRef, dataAggr[dataDate]);
-    }
+    // for (let dataDate in dataAggr) {
+    // const catRef = firestore.collection(name).doc();
+    // batch.set(catRef, dataAggr[dataDate]);
+    // transformedData.push(dataDate);
+    // }
   });
+
+  return dataAggr;
+}
+
+async function storeHealthExportData(data) {
+  const batch = firestore.batch();
+
+  for (let dataDate in data) {
+    for (let metric in data[dataDate]) {
+      const catRef = firestore.collection(metric).doc();
+      const dataToSave = data[dataDate][metric];
+      batch.set(catRef, dataToSave);
+    }
+  }
 
   return await batch.commit();
 }
 
-function notifyTelegram(response) {
-  if (response) {
-    bot.telegram.sendMessage(
-      process.env.USER1_ID,
-      `Сохранил данные о здоровье`
-    );
-  } else {
-    bot.telegram.sendMessage(
-      process.env.USER1_ID,
-      `Произошла ошибка при сохранении данных о здоровье`
-    );
+async function checkIfSaved(data) {
+  let exists = false;
+  for (let date in data) {
+    const dateData = data[date];
+
+    for (let metric in dateData) {
+      // const metricData = dateData.data;
+      const start = dateData[metric].datetime.start;
+      const end = dateData[metric].datetime.end;
+
+      const ref = await firestore.collection(metric);
+      const snapshot = await ref
+        .where("datetime.start", "==", start)
+        .where("datetime.end", "==", end)
+        .get();
+      if (!snapshot.empty) {
+        exists = true;
+        // snapshot.forEach((doc) => {
+        //   console.log(doc.id, "=>", doc.data());
+        // });
+      }
+      // const catRef = firestore.collection(dataDate).doc();
+      // batch.set(catRef, dataAggr[dataDate]);
+    }
   }
+  return exists;
+}
+
+function notifyTelegram(message) {
+  bot.telegram.sendMessage(process.env.USER1_ID, message);
 }
 // Enable graceful stop
 // process.once("SIGINT", () => bot.stop("SIGINT"));
